@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>React Workshop</title>
+  <link href="https://rawgit.com/kouphax/static/master/react-workshop/stylesheets/styles.css" rel="stylesheet">
+</head>
+<body>
+  <!-- NOT REQUIRED FOR REACT BUT MAY BE HANDY LATER -->
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <!-- REACT CORE LIBRARY (DEVELOPMENT VERSION) -->
+  <script src="http://fb.me/react-0.11.1.js"></script>
+
+  <!-- ONLY NEEDED FOR JSX FOR DEVELOPMENT AND PROTOTYPING -->
+  <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+
+  <div id="container"></div>
+  <script>
+
+    var BuyButton = React.createClass({
+      render: function(){
+        if(this.props.quantity == 0) {
+          return React.DOM.div({className: 'buy'},
+            React.DOM.button({disabled: true}, "OUT OF STOCK"))
+        } else {
+          return React.DOM.div({className: 'buy'},
+            this.props.quantity + " Left ", React.DOM.button(null, 'Buy'))
+        }
+      }
+    })
+
+    var Paint = React.createClass({
+      render: function() {
+        return React.DOM.div({className: 'paint'},
+          React.DOM.div({className: 'preview'}),
+          React.DOM.p(null, this.props.title),
+          BuyButton({quantity: this.props.quantity}))
+      }
+    })
+
+    var Application = React.createClass({
+      render: function() {
+        return React.DOM.div(null, Paint({
+          title: "Blue",
+          quantity: 10
+        }));
+      }
+    })
+
+    React.renderComponent(Application(),
+      document.getElementById('container'))
+  </script>
+</body>
+</html>

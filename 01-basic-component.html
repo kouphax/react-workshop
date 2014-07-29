@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>React Workshop</title>
+  <link href="https://rawgit.com/kouphax/static/master/react-workshop/stylesheets/styles.css" rel="stylesheet">
+</head>
+<body>
+  <!-- NOT REQUIRED FOR REACT BUT MAY BE HANDY LATER -->
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <!-- REACT CORE LIBRARY (DEVELOPMENT VERSION) -->
+  <script src="http://fb.me/react-0.11.1.js"></script>
+
+  <!-- ONLY NEEDED FOR JSX FOR DEVELOPMENT AND PROTOTYPING -->
+  <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+
+  <div id="container"></div>
+  <script>
+    var BasicComponent = React.createClass({
+      render: function() {
+        return React.DOM.h1(null, "Hello, " + this.props.name);
+      }
+    })
+
+    React.renderComponent(BasicComponent({ name: "James"}), 
+      document.getElementById('container'));
+  </script>
+</body>
+</html>

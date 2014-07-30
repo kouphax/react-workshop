@@ -25,12 +25,16 @@
             React.DOM.button({disabled: true}, "OUT OF STOCK"))
         } else {
           return React.DOM.div({className: 'buy'},
-            "£" + this.props.price.toFixed(2) + " ", React.DOM.button(null, 'Buy'))
+            "£" + this.props.price.toFixed(2) + " ", 
+            React.DOM.button({ onClick: this.props.addToCart}, 'Buy'))
         }
       }
     })
 
     var Paint = React.createClass({
+      addToCart: function() {
+        Application.bus.trigger("cart:add", this.props);
+      },
       render: function() {
         return React.DOM.div({className: 'paint'},
           React.DOM.div({
@@ -40,7 +44,11 @@
             }
           }),
           React.DOM.p(null, this.props.title),
-          BuyButton({quantity: this.props.quantity, price: this.props.price}))
+          BuyButton({
+            quantity: this.props.quantity,
+            price: this.props.price,
+            addToCart: this.addToCart
+          }))
       }
     })
 
@@ -53,7 +61,8 @@
           for(var i = 1; i <= this.props.pages; i++) {
             pagerItems.push(React.DOM.button({
               disabled: this.props.page == i, 
-              key: i
+              key: i,
+              onClick: this.props.onPageChangeClick.bind(null, i)
             }, i))
           }
           return React.DOM.div(null, pagerItems)
@@ -69,7 +78,10 @@
         }
       },
       componentDidMount: function(){
-        jQuery.getJSON(this.props.url).done(function(result){
+        this.changePage(1);
+      },
+      changePage: function(pageNumber) {
+        jQuery.getJSON(this.props.url + "?page=" + pageNumber).done(function(result){
           this.setState({ 
             paints: result.data,
             page: result.page,
@@ -85,14 +97,60 @@
 
         return React.DOM.div(null, paints, Pager({ 
           pages: this.state.pages,
-          page: this.state.page
+          page: this.state.page,
+          onPageChangeClick: this.changePage
         }));
       }
     })
 
+    var ShoppingBasket = React.createClass({
+      getInitialState: function(){
+        return { items: [], total: 0 }
+      },
+      componentDidMount: function(){
+        Application.bus.on("cart:add", function(_, data){
+          var items = this.state.items;
+          items.push(data)
+
+          var total = 0;
+          for(var i = 0; i < items.length; i++){
+            total += items[i].price;
+          }
+
+          this.setState({ items: items, total: total })
+        }.bind(this))
+      },
+      render: function(){
+        var contents;
+
+        if(this.state.items.length == 0) {
+          contents = React.DOM.p(null, "Shopping basket is empty");
+        } else {
+          var lineItems = this.state.items.map(function(item){
+            return React.DOM.tr(null, 
+              React.DOM.td(null, item.title),
+              React.DOM.td({ style: { align: "right" }}, "£" + item.price.toFixed(2)));
+          })
+
+          var totalLine = React.DOM.tr({ className: "total"},
+              React.DOM.td(null, "Total:"),
+              React.DOM.td({ style: { align: "right" }}, "£" + this.state.total.toFixed(2)));
+
+          contents = React.DOM.table({ style: { width: "100%" }}, 
+            React.DOM.tbody(null, lineItems, totalLine))
+        }
+        return React.DOM.div({className: "basket"},
+          React.DOM.h1(null, "Shopping Basket"),
+          contents);
+      }
+    })
+
     var Application = React.createClass({
+      statics: {
+        bus: $({})
+      },
       render: function() {
-        return React.DOM.div(null, PaintList({ url: this.props.url }));
+        return React.DOM.div(null, ShoppingBasket(), PaintList({ url: this.props.url }));
       }
     })
 

@@ -25,7 +25,7 @@
             React.DOM.button({disabled: true}, "OUT OF STOCK"))
         } else {
           return React.DOM.div({className: 'buy'},
-            this.props.quantity + " Left ", React.DOM.button(null, 'Buy'))
+            "£" + this.props.price.toFixed(2) + " ", React.DOM.button(null, 'Buy'))
         }
       }
     })
@@ -35,7 +35,7 @@
         return React.DOM.div({className: 'paint'},
           React.DOM.div({className: 'preview'}),
           React.DOM.p(null, "Blue"),
-          BuyButton({quantity: 10}))
+          BuyButton({quantity: 10, price: 2.30}))
       }
     })
 

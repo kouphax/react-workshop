@@ -25,7 +25,8 @@
             React.DOM.button({disabled: true}, "OUT OF STOCK"))
         } else {
           return React.DOM.div({className: 'buy'},
-            this.props.quantity + " Left ", React.DOM.button({ onClick: this.props.addToCart}, 'Buy'))
+            "£" + this.props.price.toFixed(2) + " ", 
+            React.DOM.button({ onClick: this.props.addToCart}, 'Buy'))
         }
       }
     })
@@ -45,6 +46,7 @@
           React.DOM.p(null, this.props.title),
           BuyButton({
             quantity: this.props.quantity,
+            price: this.props.price,
             addToCart: this.addToCart
           }))
       }
@@ -118,11 +120,13 @@
         if(this.state.items.length == 0) {
           contents = React.DOM.p(null, "Shopping basket is empty");
         } else {
-          contents = React.DOM.ul(null, 
-            this.state.items.map(function(item){
-              return React.DOM.li(null, item.title);
-            })
-          )
+          var lineItems = this.state.items.map(function(item){
+            return React.DOM.tr(null, 
+              React.DOM.td(null, item.title),
+              React.DOM.td({ style: { align: "right" }}, "£" + item.price.toFixed(2)));
+          })
+
+          contents = React.DOM.table({ style: { width: "100%" }}, lineItems)
         }
         return React.DOM.div({className: "basket"},
           React.DOM.h1(null, "Shopping Basket"),

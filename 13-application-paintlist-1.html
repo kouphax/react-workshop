@@ -25,7 +25,7 @@
             React.DOM.button({disabled: true}, "OUT OF STOCK"))
         } else {
           return React.DOM.div({className: 'buy'},
-            this.props.quantity + " Left ", React.DOM.button(null, 'Buy'))
+            "£" + this.props.price.toFixed(2) + " ", React.DOM.button(null, 'Buy'))
         }
       }
     })
@@ -40,17 +40,17 @@
             }
           }),
           React.DOM.p(null, this.props.title),
-          BuyButton({quantity: this.props.quantity}))
+          BuyButton({quantity: this.props.quantity, price: this.props.price}))
       }
     })
 
     var PaintList = React.createClass({
       render: function(){
         return React.DOM.div(null, [
-          Paint({title: "Blue", quantity: 10, code: '#006', key: 1}),
-          Paint({title: "Green", quantity: 0, code: '#060', key: 2}),
-          Paint({title: "Red", quantity: 1, code: '#600', key: 3}),
-          Paint({title: "Black", quantity: 14, code: '#000', key: 4})
+          Paint({title: "Blue", quantity: 10, price: 2.30, code: '#006', key: 1}),
+          Paint({title: "Green", quantity: 0, price: 1.50, code: '#060', key: 2}),
+          Paint({title: "Red", quantity: 1, price: 1.00, code: '#600', key: 3}),
+          Paint({title: "Black", quantity: 14, price: 4.00, code: '#000', key: 4})
         ])
       }
     })

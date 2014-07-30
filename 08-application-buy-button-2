@@ -21,13 +21,13 @@
     var BuyButton = React.createClass({
       render: function(){
         return React.DOM.div({className: 'buy'},
-          this.props.quantity + " Left ", React.DOM.button(null, 'Buy'))
+          "£" + this.props.price.toFixed(2) + " ", React.DOM.button(null, 'Buy'))
       }
     })
 
     var Application = React.createClass({
       render: function() {
-        return React.DOM.div(null, BuyButton({quantity: 18}));
+        return React.DOM.div(null, BuyButton({price: 2.30}));
       }
     })
 
